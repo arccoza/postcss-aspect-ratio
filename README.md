@@ -1,0 +1,1 @@
+A PostCSS plugin to fix an element's dimensions to an aspect ratio.

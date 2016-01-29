@@ -1,0 +1,29 @@
+{
+  "name": "postcss-aspect-ratio",
+  "version": "1.0.0",
+  "description": "A PostCSS plugin to fix an element's dimensions to an aspect ratio.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arccoza/postcss-aspect-ratio.git"
+  },
+  "keywords": [
+    "postcss",
+    "postcss-aspect-ratio",
+    "postcss-plugin",
+    "plugin",
+    "aspect-ratio",
+    "aspect",
+    "ratio",
+    "css"
+  ],
+  "author": "Adrien de Pierres",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arccoza/postcss-aspect-ratio/issues"
+  },
+  "homepage": "https://github.com/arccoza/postcss-aspect-ratio#readme"
+}
