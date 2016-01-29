@@ -1,30 +1,28 @@
 var postcss = require('postcss');
 
 
-// Default properties for all layouts.
+// Default properties for aspect ratios.
 var defaults = {};
 defaults.container = {
-  "box-sizing": "border-box",
-  "margin-left": "0",
-  "margin-right": "0",
-  "text-align": "initial",
-  "font-size": "initial"
+  "position": "relative",
+  "box-sizing": "border-box"
 }
 
 defaults.item = {
-  "box-sizing": "border-box",
-  "display": "initial",
-  "text-align": "initial",
-  "vertical-align": "initial",
-  "white-space": "initial",
-  "font-size": "initial"
+  "position": "absolute",
+  "top": "0",
+  "right": "0",
+  "bottom": "0",
+  "left": "0",
+  "box-sizing": "border-box"
 }
 
 defaults.pseudo = {
   "position": "relative",
-  "display": "none",
-  "content": "normal",
-  "clear": "none"
+  "display": "block",
+  "content": "\"\"",
+  "padding-top": "100%",
+  "box-sizing": "border-box"
 }
 
 module.exports = postcss.plugin('postcss-layout', function (opts) {
@@ -34,12 +32,71 @@ module.exports = postcss.plugin('postcss-layout', function (opts) {
   
   return function (css, result) {
     css
-      .walkDecls(/aspect-ratio|aspect|ratio/, function(decl) {
-        console.log(decl);
+      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function(decl) {
+        var ratio = {};
+        ratio.value = processRatioValue(css, decl.parent, decl);
+        processRatioConf(css, decl.parent, decl, ratio);
+
+        aspectRatio(css, decl.parent, decl, ratio);
       });
   };
 });
 
+function processRatioValue(css, rule, decl) {
+  var ratio = null;
+
+  ratio = decl.value.match(/\s*((\d+)(?:\:|\|)(\d+))\s*/);
+  if(ratio) {
+    ratio = ratio[3] / ratio[2] * 100 + '%';
+    console.log(ratio);
+  }
+  else if(ratio = decl.value.match(/\s*(\d+(?:\.\d+)%)\s*/)) {
+    ratio = ratio[0];
+  }
+  else {
+    throw decl.error('Invalid aspect-ratio value. ' + decl.prop + ': ' + decl.value, { plugin: 'postcss-aspect-ratio' });
+  }
+
+  return ratio;
+}
+
+function processRatioConf(css, rule, decl, ratio) {
+  var sels = [];
+
+  ratio.container = clone(defaults.container);
+  // ratio.container.source = decl.source;
+  ratio.item = clone(defaults.item);
+  ratio.item.source = decl.source;
+  ratio.pseudo = clone(defaults.pseudo);
+  ratio.pseudo.source = decl.source;
+
+  for (var i = 0; i < rule.selectors.length; i++) {
+    sels.push(rule.selectors[i] + ' > *');
+  };
+
+  ratio.item.selector = sels.join(', ');
+  sels = [];
+
+  for (var i = 0; i < rule.selectors.length; i++) {
+    sels.push(rule.selectors[i] + ':before');
+  };
+
+  ratio.pseudo.selector = sels.join(', ');
+
+}
+
+function aspectRatio(css, rule, decl, ratio) {
+  var parent = rule.parent;
+
+  objToRule(ratio.container, rule);
+  ratio.pseudo["padding-top"] = ratio.value;
+  console.log(ratio.pseudo);
+  parent.insertAfter(rule, objToRule(ratio.pseudo));
+  parent.insertAfter(rule, objToRule(ratio.item));
+
+  // Remove the aspect-ratio prop.
+  decl.remove();
+}
 
 // Convert a js obj to a postcss rule, extending clonedRule if it is passed in.
 function objToRule(obj, clonedRule) {

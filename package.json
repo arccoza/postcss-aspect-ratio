@@ -25,5 +25,15 @@
   "bugs": {
     "url": "https://github.com/arccoza/postcss-aspect-ratio/issues"
   },
-  "homepage": "https://github.com/arccoza/postcss-aspect-ratio#readme"
+  "homepage": "https://github.com/arccoza/postcss-aspect-ratio#readme",
+  "dependencies": {
+    "postcss": "^5.0.14"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-postcss": "^6.0.1",
+    "gulp-shell": "^0.5.2",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.4.0"
+  }
 }
