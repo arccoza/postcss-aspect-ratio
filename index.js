@@ -44,18 +44,24 @@ module.exports = postcss.plugin('postcss-layout', function (opts) {
 
 function processRatioValue(css, rule, decl) {
   var ratio = null;
+  var re = /['"]?((\d+)(?:\:|\|)(\d+))['"]?/g;
 
-  ratio = decl.value.match(/\s*((\d+)(?:\:|\|)(\d+))\s*/);
-  if(ratio) {
-    ratio = ratio[3] / ratio[2] * 100 + '%';
-    console.log(ratio);
-  }
-  else if(ratio = decl.value.match(/\s*(\d+(?:\.\d+)%)\s*/)) {
-    ratio = ratio[0];
-  }
-  else {
-    throw decl.error('Invalid aspect-ratio value. ' + decl.prop + ': ' + decl.value, { plugin: 'postcss-aspect-ratio' });
-  }
+  // ratio = decl.value.match(/\s*((\d+)(?:\:|\|)(\d+))\s*/);
+  // if(ratio) {
+  //   ratio = ratio[3] / ratio[2] * 100 + '%';
+  //   console.log(ratio);
+  // }
+  // else if(ratio = decl.value.match(/\s*(\d+(?:\.\d+)%)\s*/)) {
+  //   ratio = ratio[0];
+  // }
+  // else {
+  //   throw decl.error('Invalid aspect-ratio value. ' + decl.prop + ': ' + decl.value, { plugin: 'postcss-aspect-ratio' });
+  // }
+
+  ratio = decl.value;
+  ratio = ratio.replace(re, function(match, r, x, y) {
+    return y / x * 100 + '%';
+  });
 
   return ratio;
 }
@@ -90,7 +96,6 @@ function aspectRatio(css, rule, decl, ratio) {
 
   objToRule(ratio.container, rule);
   ratio.pseudo["padding-top"] = ratio.value;
-  console.log(ratio.pseudo);
   parent.insertAfter(rule, objToRule(ratio.pseudo));
   parent.insertAfter(rule, objToRule(ratio.item));
 
