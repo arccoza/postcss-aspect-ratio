@@ -1,30 +1,25 @@
 var gulp = require('gulp');
 var postcss = require('gulp-postcss');
-var layout = require('./index.js');
-var shell = require('gulp-shell');
+var ifm = require('./index.js');
+// var shell = require('gulp-shell');
+var tape = require('gulp-tape');
+var tapDiff = require('tap-diff');
 
 
-var files = ['index.js', './test/*.js', './example/src/css/main.css', 'gulpfile.js'];
+var files = ['index.js', './test/*.js', 'gulpfile.js'];
 
-gulp.task('example', function() {
-  var processors = [
-    layout()
-  ];
+// gulp.task('test', shell.task([
+//   'node test/test.js',
+// ]));
 
-  return gulp.src('./example/src/css/main.css')
-    .pipe(postcss(processors))
-    .pipe(gulp.dest('./example/bld/css/'));
+gulp.task('test', function() {
+  return gulp.src('test/*.js')
+    .pipe(tape({
+      reporter: tapDiff()
+    }));
 });
-
-gulp.task('test', shell.task([
-  'node test/test.js',
-]));
 
 gulp.task('default', ['test']);
-
-gulp.task('watch-example', function () {
-    gulp.watch(files, ['example']);
-});
 
 gulp.task('watch', function () {
     gulp.watch(files, ['test']);
