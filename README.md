@@ -22,6 +22,9 @@ Therefore this plugin requires a specific HTML structure to work. The element yo
 </div>
 ```
 
+## Install
+`npm install postcss-aspect-ratio --save`
+
 ## Example 1
 A simple example using the custom ratio value `'16:9'`.
 
