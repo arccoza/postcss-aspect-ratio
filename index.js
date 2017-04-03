@@ -29,7 +29,7 @@ module.exports = postcss.plugin('postcss-layout', function (opts) {
   opts = opts || {};
   opts._grids = {};
   var grids = opts._grids;
-  
+
   return function (css, result) {
     css
       .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function(decl) {
@@ -44,7 +44,7 @@ module.exports = postcss.plugin('postcss-layout', function (opts) {
 
 function processRatioValue(css, rule, decl) {
   var ratio = null;
-  var re = /['"]?((\d+)(?:\:|\|)(\d+))['"]?/g;
+  var re = /['"]?(((?:\d*\.?\d*)?)(?:\:|\|)(\d+))['"]?/g;
 
   // ratio = decl.value.match(/\s*((\d+)(?:\:|\|)(\d+))\s*/);
   // if(ratio) {
@@ -60,6 +60,7 @@ function processRatioValue(css, rule, decl) {
 
   ratio = decl.value;
   ratio = ratio.replace(re, function(match, r, x, y) {
+    console.log(match, r, x, y)
     return y / x * 100 + '%';
   });
 
@@ -131,7 +132,7 @@ function objToRule(obj, clonedRule) {
           }
         });
       }
-      
+
       // If no clonedRule or there was no existing prop.
       if(!clonedRule || !found)
         rule.append({prop: k, value: v});

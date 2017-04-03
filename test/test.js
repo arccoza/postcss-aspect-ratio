@@ -19,7 +19,7 @@ var opts = {};
 var processor = postcss([plugin(opts)]);
 
 var tests = {
-  "inline": [ 
+  "inline": [
     {
       "msg": "Set aspect-ratio with a simple '4:3' special ratio value (converted to a %).",
       "chk": "equal",
@@ -127,7 +127,19 @@ var tests = {
         ".test:before {\n",
         "position: relative; display: block; content: \"\"; padding-top: 100%; box-sizing: border-box;\n",
         "}")
-    }
+    },
+    {
+      "msg": "Set aspect-ratio with the silver '2.414:1' special ratio value.",
+      "chk": "equal",
+      "in": ".test { position: relative; aspect-ratio: '2.414:1'; }",
+      "out": "".concat(".test { position: relative; box-sizing: border-box; }\n",
+        ".test > * {\n",
+        "position: absolute; top: 0; right: 0; bottom: 0; left: 0; box-sizing: border-box;\n",
+        "}\n",
+        ".test:before {\n",
+        "position: relative; display: block; content: \"\"; padding-top: "+ 1/2.414*100 + "%; box-sizing: border-box;\n",
+        "}")
+    },
   ]
 }
 
@@ -140,7 +152,7 @@ test('Test the custom property aspect-ratio(aka aspect, aka ratio).', function(t
   for (var i = 0; i < tests['inline'].length; i++) {
     fix = tests['inline'][i];
     lazy = processor.process(fix.in);
-    
+
     if(fix.chk == 'throws')
       t.throws(function() { css = lazy.css; }, fix.out);
     else
