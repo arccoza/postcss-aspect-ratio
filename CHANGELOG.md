@@ -1,3 +1,7 @@
+## [1.0.1] - 2016-02-10
+### Changed
+- Fixed ratio regex to accomodate decimal points.
+
 ## [1.0.0] - 2016-02-10
 ### Changed
 - Plugin functionality and API stable, and passing tests.
