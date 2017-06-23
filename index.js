@@ -1,5 +1,5 @@
 var postcss = require('postcss');
-var print = console.bind(console);
+var print = console.log.bind(console);
 
 
 // Default properties for aspect ratios.
