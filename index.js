@@ -1,6 +1,5 @@
 var postcss = require('postcss');
 
-
 // Default properties for aspect ratios.
 var defaults = {};
 defaults.container = {
@@ -32,7 +31,7 @@ module.exports = postcss.plugin('postcss-layout', function (opts) {
 
   return function (css, result) {
     css
-      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function(decl) {
+      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function (decl) {
         var ratio = {};
         ratio.value = processRatioValue(css, decl.parent, decl);
         processRatioConf(css, decl.parent, decl, ratio);
@@ -46,21 +45,8 @@ function processRatioValue(css, rule, decl) {
   var ratio = null;
   var re = /['"]?(((?:\d*\.?\d*)?)(?:\:|\|)(\d+))['"]?/g;
 
-  // ratio = decl.value.match(/\s*((\d+)(?:\:|\|)(\d+))\s*/);
-  // if(ratio) {
-  //   ratio = ratio[3] / ratio[2] * 100 + '%';
-  //   console.log(ratio);
-  // }
-  // else if(ratio = decl.value.match(/\s*(\d+(?:\.\d+)%)\s*/)) {
-  //   ratio = ratio[0];
-  // }
-  // else {
-  //   throw decl.error('Invalid aspect-ratio value. ' + decl.prop + ': ' + decl.value, { plugin: 'postcss-aspect-ratio' });
-  // }
-
   ratio = decl.value;
-  ratio = ratio.replace(re, function(match, r, x, y) {
-    console.log(match, r, x, y)
+  ratio = ratio.replace(re, function (match, r, x, y) {
     return y / x * 100 + '%';
   });
 
@@ -71,7 +57,6 @@ function processRatioConf(css, rule, decl, ratio) {
   var sels = [];
 
   ratio.container = clone(defaults.container);
-  // ratio.container.source = decl.source;
   ratio.item = clone(defaults.item);
   ratio.item.source = decl.source;
   ratio.pseudo = clone(defaults.pseudo);
@@ -109,23 +94,23 @@ function objToRule(obj, clonedRule) {
   var rule = clonedRule || postcss.rule();
   var skipKeys = ['selector', 'selectors', 'source'];
 
-  if(obj.selector)
+  if (obj.selector)
     rule.selector = obj.selector;
-  else if(obj.selectors)
+  else if (obj.selectors)
     rule.selectors = obj.selectors;
 
-  if(obj.source)
+  if (obj.source)
     rule.source = obj.source;
 
-  for(var k in obj) {
-    if(obj.hasOwnProperty(k) && !(skipKeys.indexOf(k) + 1)) {
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k) && !(skipKeys.indexOf(k) + 1)) {
       var v = obj[k];
       var found = false;
 
       // If clonedRule was passed in, check for an existing property.
-      if(clonedRule) {
-        rule.each(function(decl) {
-          if(decl.prop == k) {
+      if (clonedRule) {
+        rule.each(function (decl) {
+          if (decl.prop == k) {
             decl.value = v;
             found = true;
             return false;
@@ -134,8 +119,8 @@ function objToRule(obj, clonedRule) {
       }
 
       // If no clonedRule or there was no existing prop.
-      if(!clonedRule || !found)
-        rule.append({prop: k, value: v});
+      if (!clonedRule || !found)
+        rule.append({ prop: k, value: v });
     }
   }
 
