@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/arccoza/postcss-aspect-ratio#readme",
   "dependencies": {
-    "postcss": "^5.0.14"
+    "postcss": ">=5.0.14 <=6.x"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
