@@ -1,7 +1,10 @@
 var postcss = require('postcss');
+var print = console.bind(console);
+
 
 // Default properties for aspect ratios.
 var defaults = {};
+
 defaults.container = {
   "position": "relative",
   "box-sizing": "border-box"
@@ -24,14 +27,14 @@ defaults.pseudo = {
   "box-sizing": "border-box"
 }
 
-module.exports = postcss.plugin('postcss-layout', function (opts) {
+module.exports = postcss.plugin('postcss-layout', function(opts) {
   opts = opts || {};
   opts._grids = {};
   var grids = opts._grids;
 
-  return function (css, result) {
+  return function(css, result) {
     css
-      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function (decl) {
+      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function(decl) {
         var ratio = {};
         ratio.value = processRatioValue(css, decl.parent, decl);
         processRatioConf(css, decl.parent, decl, ratio);
@@ -46,7 +49,7 @@ function processRatioValue(css, rule, decl) {
   var re = /['"]?(((?:\d*\.?\d*)?)(?:\:|\|)(\d+))['"]?/g;
 
   ratio = decl.value;
-  ratio = ratio.replace(re, function (match, r, x, y) {
+  ratio = ratio.replace(re, function(match, r, x, y) {
     return y / x * 100 + '%';
   });
 
@@ -109,7 +112,7 @@ function objToRule(obj, clonedRule) {
 
       // If clonedRule was passed in, check for an existing property.
       if (clonedRule) {
-        rule.each(function (decl) {
+        rule.each(function(decl) {
           if (decl.prop == k) {
             decl.value = v;
             found = true;
