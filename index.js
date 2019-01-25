@@ -23,18 +23,17 @@ defaults.pseudo = {
   "position": "relative",
   "display": "block",
   "content": "\"\"",
+  "float": "left",
   "padding-top": "100%",
   "box-sizing": "border-box"
 }
 
-module.exports = postcss.plugin('postcss-layout', function(opts) {
+module.exports = postcss.plugin('postcss-layout', opts => {
   opts = opts || {};
-  opts._grids = {};
-  var grids = opts._grids;
 
   return function(css, result) {
     css
-      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, function(decl) {
+      .walkDecls(/^(aspect-ratio|aspect|ratio)$/, decl => {
         var ratio = {};
         ratio.value = processRatioValue(css, decl.parent, decl);
         processRatioConf(css, decl.parent, decl, ratio);
